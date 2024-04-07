@@ -10,9 +10,9 @@
 ![Yandex Tracker](https://img.shields.io/badge/-Yandextracker-5282ff?style=for-the-badge&logo=yandextracker&logoColor=blue)<br>
 ![Postman](https://img.shields.io/badge/-Postman-090909?style=for-the-badge&logo=postman&logoColor=#FF6C37)
 ![Swagger](https://img.shields.io/badge/-Swagger-090909?style=for-the-badge&logo=swagger&logoColor=#FF6C37)
+![apiDoc](https://img.shields.io/badge/-apiDoc-0088cc?style=for-the-badge&logo=apidoc&logoColor=#FF6C37)
 ![DevTools](https://img.shields.io/badge/-DevTools-f4f5f6?style=for-the-badge&logo=googlechrome&logoColor=#FF6C37)
 ![Charles](https://img.shields.io/badge/-Charles-bbddee?style=for-the-badge&logo=charles&logoColor=#FF6C37)
-![apiDoc](https://img.shields.io/badge/-apiDoc-0088cc?style=for-the-badge&logo=apidoc&logoColor=#FF6C37)
 ![Android Studio](https://img.shields.io/badge/-AndroidStudio-090909?style=for-the-badge&logo=androidstudio&logoColor=#FF6C37)
 ![adb](https://img.shields.io/badge/-adb-090909?style=for-the-badge&logo=adb&logoColor=#FF6C37)<br>
 ![SQL](https://img.shields.io/badge/-SQL-white?style=for-the-badge&logo=mysql&logoColor=#FF6C37)
