@@ -80,7 +80,7 @@ VALUES ('бас'), ('баритон'), ('тенор'), ('меццо-сопран
 ```
 <details>
     <summary>Результат</summary>
-    ![voice](./selects/voice.png)
+    ![voice](selects/voice.png)
 </details><br>
 
 
