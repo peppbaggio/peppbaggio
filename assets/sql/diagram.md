@@ -1,4 +1,5 @@
 ## База "Theater"
+[На Главную](../../README.md)
 
 ![diagram](Theater.drawio.svg)<br>
 ## Запросы

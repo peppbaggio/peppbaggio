@@ -1,4 +1,5 @@
 # Выборки из таблиц
+[Назад к диаграмме](diagram.md)
 *   *Вывести список певцов, в чьем репертуаре есть партия Гремина, сортировать по убыванию гонорара.*
 ```sql
 SELECT character_name, singer_name, rate_per_performance FROM singer
