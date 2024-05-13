@@ -10,6 +10,7 @@ ORDER BY rate_per_performance DESC, singer_name ASC;
 ```
 <details>
     <summary>Результат</summary>
+    <img src="selects/gremin.png">
 </details><br>
 
 *   *Вывести список опер, которые не могут быть поставлены силами театра (opera.is_staged = 0), список партий из этих опер, которых нет в репертуаре певцев с указанием типа голоса, и список певцов труппы с подходящими голосами (или прочерк, если таких пецов нет)*
@@ -33,6 +34,7 @@ ORDER BY opera_title, character_name, singer_name;
 ```
 <details>
     <summary>Результат</summary>
+    <img src="selects/non_staged_operas.png">
 </details><br>
 
 *   *Увольняется Й. Марини. Вывести оперы, которые теперь невозможно исполнять, вместе с партиями для соответствующего голоса. Здесь два запроса: вывести партии, для которых Марини — единственный исполнитель; вычислить количество певиц с ее типом голоса в труппе и вывести оперы, в которых требуют участия сразу всех певицы с этим типом голоса*
@@ -66,4 +68,5 @@ ORDER BY opera_title, character_name;
 ```
 <details>
     <summary>Результат</summary>
+    <img src="selects/without_marini.png">
 </details><br>
