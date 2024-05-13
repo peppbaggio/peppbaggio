@@ -80,7 +80,7 @@ VALUES ('бас'), ('баритон'), ('тенор'), ('меццо-сопран
 ```
 <details>
     <summary>Результат</summary>
-    <img scr="selects/voice.png">
+    <img scr="https://www.google.com/imgres?q=ghj&imgurl=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100064023637928&imgrefurl=https%3A%2F%2Fm.facebook.com%2Fghjdesign%2F&docid=HU9EX1YJYt1sxM&tbnid=LeKX6oJ61NrtqM&vet=12ahUKEwiMg5-W2YuGAxX1LRAIHV0CDJMQM3oECBsQAA..i&w=1500&h=1500&hcb=2&ved=2ahUKEwiMg5-W2YuGAxX1LRAIHV0CDJMQM3oECBsQAA">
 </details><br>
 
 
