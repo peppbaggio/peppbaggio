@@ -80,7 +80,7 @@ VALUES ('бас'), ('баритон'), ('тенор'), ('меццо-сопран
 ```
 <details>
     <summary>Результат</summary>
-    <img scr="https://www.google.com/imgres?q=ghj&imgurl=https%3A%2F%2Flookaside.fbsbx.com%2Flookaside%2Fcrawler%2Fmedia%2F%3Fmedia_id%3D100064023637928&imgrefurl=https%3A%2F%2Fm.facebook.com%2Fghjdesign%2F&docid=HU9EX1YJYt1sxM&tbnid=LeKX6oJ61NrtqM&vet=12ahUKEwiMg5-W2YuGAxX1LRAIHV0CDJMQM3oECBsQAA..i&w=1500&h=1500&hcb=2&ved=2ahUKEwiMg5-W2YuGAxX1LRAIHV0CDJMQM3oECBsQAA">
+    <img src="selects/voice.png">
 </details><br>
 
 
@@ -91,17 +91,17 @@ VALUES (150000.00), (130000.00), (100000.00), (90000.00), (70000.00), (50000.00)
 ```
 <details>
     <summary>Результат</summary>
-    
+    <img src="selects/rate.png">
 </details><br>
 
 *   **Таблица *composer***<br>
 ```sql
 INSERT INTO composer (composer_name) 
-VALUES ('Чайковский П. И.'), ('Верди Дж.'), ('Моцарт В. А.'), ('Римский-Корсаков Н. А.');
+VALUES ('Чайковский П. И.'), ('Верди Дж.'), ('Моцарт В. А.'), ('Римский-Корсаков Н. А.'), ('Сен-Санс К.');
 ```
 <details>
     <summary>Результат</summary>
-    
+    <img src="selects/composer.png">
 </details><br>
 
 *   **Таблица *opera***<br>
@@ -114,11 +114,12 @@ VALUES ('Волшебная флейта', 3, 2900000.98, TRUE),
 ('Пиковая дама', 1, 1970000, TRUE),
 ('Травиата', 2, 1355000.00, TRUE),
 ('Фальстаф', 2, NULL, FALSE),
-('Царская невеста', 4, 2100000.00, TRUE);
+('Царская невеста', 4, 2100000.00, TRUE),
+('Самсон и Далила', 5, 3000000.00, TRUE);
 ```
 <details>
     <summary>Результат</summary>
-    
+    <img src="selects/opera.png">
 </details><br>
 
 *   **Таблица *opera_character***<br>
@@ -129,7 +130,7 @@ INTO TABLE opera_character;
 ```
 <details>
     <summary>Результат</summary>
-    
+    <img src="selects/opera_character.png">
 </details><br>
 
 *   **Таблица *singer***<br>
@@ -140,7 +141,7 @@ INTO TABLE singer;
 ```
 <details>
     <summary>Результат</summary>
-    
+    <img src="selects/singer.png">
 </details><br>
 
 *   **Таблица *role***<br>
@@ -151,5 +152,5 @@ INTO TABLE role;
 ```
 <details>
     <summary>Результат</summary>
-    
+    <img src="selects/role.png">
 </details><br>
