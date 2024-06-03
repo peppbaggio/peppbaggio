@@ -28,7 +28,7 @@
 *   *   [Тестирование веб (баг-репорты в YouTrack)](https://peppino.youtrack.cloud/issues/tctc "Баг-репорты в YouTrack")
 *   *   [Тестирование мобильного приложения (баг-репорты в YouTrack)](https://peppino.youtrack.cloud/issues/mobsamregr "Баг-репорты в YouTrack")
 *   **SQL-запросы:** [таблица Theater (Mariadb) ](assets/sql/diagram.md)
-*   **Тестирование API:*
+*   **Тестирование API:**
 *   *   [Postman-коллекция](assets/postman/postman.md)
 
 
