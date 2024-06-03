@@ -1,0 +1,1317 @@
+{
+	"info": {
+		"_postman_id": "d28dd86c-9e5e-4188-979a-0397edb1c529",
+		"name": "Restful-API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32574071"
+	},
+	"item": [
+		{
+			"name": "Get_all_objects",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправке запроса на получение всех объектов возвращается код 200 и массив с объекстами  */",
+							"",
+							"// Проверяем статус запроса",
+							"pm.test('Успешный GET-запрос', () => {",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"//Проверяем структуру ответа",
+							"pm.test('Структура ответа: массив', () => {",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"})",
+							"",
+							"// Выборочно проверяем структуру объектов (первый и последний)",
+							"pm.test('Первый и последний элементы массива являются объектами и содержат обязательные параметры', () => {",
+							"    pm.expect(jsonData[0]).to.be.an('object').that.has.all.keys('id', 'name', 'data');",
+							"    pm.expect(jsonData[jsonData.length - 1]).to.be.an('object').that.has.all.keys('id', 'name', 'data');",
+							"})",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Objects_by_path_ids_correct",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Успешный запрос', () => {",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Структура ответа', () => {",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"    pm.expect(jsonData[0]).to.be.an('object').that.has.all.keys('id', 'name', 'data');",
+							"    pm.expect(jsonData[1]).to.be.an('object').that.has.all.keys('id', 'name', 'data');",
+							"})",
+							"",
+							"pm.test(\"Указанные ids присутствуют\", () => {",
+							"    pm.expect(jsonData[0].id).to.eql(pm.variables.get(\"first_id\"));",
+							"    pm.expect(jsonData[1].id).to.eql(pm.variables.get(\"second_id\"));",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Задаем переменные, которые станут параметрами пути запроса. id имеет строковый тип",
+							"",
+							"pm.variables.set('first_id', '1');",
+							"pm.variables.set('second_id', '2');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects?id={{first_id}}&id={{second_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{first_id}}"
+						},
+						{
+							"key": "id",
+							"value": "{{second_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Objects_by_path_ids_non_existing_ids",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправки запроса на получение объекта по id с несуществующим id возвращается код 404 (ФР: баг) */",
+							"",
+							"// Проверяем код ответа",
+							"pm.test ('Основной GET-запрос', () => {",
+							"    pm.response.to.have.status(404)",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Задаем переменные, которые станут параметрами пути запроса. id имеет строковый тип",
+							"",
+							"pm.variables.set('first_id', '000000000');",
+							"pm.variables.set('second_id', '000000-000000');"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects?id={{first_id}}&id+{{second_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{first_id}}"
+						},
+						{
+							"key": "id+{{second_id}}",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Objects_by_path_ids_one_id_only",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправке запроса на получение списка объектов по id, содержащего в параметрах пути id только одного объекта, возвращается этот объект, ошибки нет */",
+							"",
+							"pm.test('Основной GET-запрос', () => {",
+							"    pm.response.to.have.status(200);",
+							"})",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Структура ответа', () => {",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"    pm.expect(jsonData[0]).to.be.an('object').that.has.all.keys('id', 'name', 'data');",
+							"})",
+							"",
+							"pm.test(\"Указанный id присутствует в ответе\", () => {",
+							"    pm.expect(jsonData[0].id).to.eql(pm.collectionVariables.get('ids'));",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Предварительный запрос на создание тестового объекта",
+							"const postRequest = {",
+							"    method: 'POST',",
+							"    url: 'https://api.restful-api.dev/objects',",
+							"    header: {'Content-Type': 'application/json'},",
+							"    body: {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify ({",
+							"        'name': 'Test Phone',",
+							"        'data': {}",
+							"     })",
+							"    }",
+							"}",
+							"",
+							"pm.sendRequest(postRequest, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  }",
+							"  ",
+							"// Проверяем код ответа",
+							"    pm.test('Предварительный POST-запрос', () => {",
+							"        pm.expect(response).to.have.status(200);",
+							"    });",
+							"",
+							"// Получаем id объекта для проверки наличия в базе и основного запроса",
+							"    pm.collectionVariables.set('ids', response.json().id);",
+							"    let requestId = pm.collectionVariables.get('ids');",
+							"",
+							"// Проверяем, что объект создан",
+							"    pm.test('Объект есть в базе', () => {",
+							"        pm.sendRequest(`https://api.restful-api.dev/objects/${requestId}`, (error, response) => {",
+							"        pm.expect(response).to.have.status(200);",
+							"        pm.expect(response.json().id).to.eql(requestId);",
+							"    })",
+							"});",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects?id={{ids}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{ids}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Objects_by_path_ids_incorrect",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/*При отправке запроса на получение списка объектов по id, содержащего один id неправильного типа данных (не строка), возвращается ошибка 400. Значения берутся из файла objects_by_path_ids_incorrect при запуске коллекции */",
+							"",
+							"pm.test('Основной GET-запрос', () => {",
+							"    pm.response.to.have.status(400);",
+							"})",
+							"",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects?id={{get_incorrect_list_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					],
+					"query": [
+						{
+							"key": "id",
+							"value": "{{get_incorrect_list_id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_single_object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/*При отправке запроса на получение одного объекста по id возвращается код 200 и объект с заданным id */",
+							"",
+							"",
+							"// Проверяем код ответа",
+							"pm.test ('Основной GET-запрос', () => {",
+							"    pm.response.to.have.status(200)",
+							"});",
+							"",
+							"// Проверяем структуру ответа и соотвествие запрошенного id полученному",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test ('Структура ответа', () => {",
+							"    pm.expect(jsonData).to.be.an('object');",
+							"    pm.expect(jsonData).to.have.all.keys('id', 'name', 'data');",
+							"});",
+							"",
+							"pm.test('Совпадение id', () => {",
+							"    // Присваиваем переменной значение переменной коллекции 'ids' и проверяем, что id в параметре пути запроса соответствует id, возвращенной в ответе",
+							"    let requestId = pm.collectionVariables.get('ids');",
+							"    pm.expect(jsonData.id).to.be.eql(requestId);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Предварительно создаем тестовый объект Techno Spark: запрос присваиваем константе postRequest",
+							"",
+							"const postRequest = {",
+							"    method: \"POST\",",
+							"    url: \"https://api.restful-api.dev/objects\",",
+							"    header: {",
+							"        'Content-Type': 'application/json'",
+							"    },",
+							"    body:     {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify ({",
+							"    \"name\": \"Techno Spark\",",
+							"    \"data\": {",
+							"        \"color\": \"black\",",
+							"        \"price\": 8550.00",
+							"    }",
+							"    })",
+							"    }",
+							"};",
+							"",
+							"// Отправляем запрос, ошибки выводим в консоль",
+							"pm.sendRequest(postRequest, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  }",
+							"// Проверяем код ответа",
+							"    pm.test('Предварительный POST-запрос', () => {",
+							"        pm.expect(response).to.have.status(200);",
+							"    });",
+							"",
+							"// Получаем id объекта для проверки наличия в базе и основного запроса",
+							"    pm.collectionVariables.set('ids', response.json().id);",
+							"    let requestId = pm.collectionVariables.get('ids');",
+							"",
+							"// Проверяем, что объект создан",
+							"    pm.test('Объект есть в базе', () => {",
+							"        pm.sendRequest(`https://api.restful-api.dev/objects/${requestId}`, (error, response) => {",
+							"        pm.expect(response).to.have.status(200);",
+							"        pm.expect(response.json().id).to.eql(requestId);",
+							"    })",
+							"});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects/{{ids}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"{{ids}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_single_object _non_existing_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправки запроса на получение объекта по id с несуществующим id возвращается код 404*/",
+							"",
+							"pm.test ('Основной GET-запрос', () => {",
+							"    pm.response.to.have.status(404)",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects/0000000000000",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"0000000000000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get_single_object_incorrect_id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/*При отправке запроса на получение одного объекта с некорректным id возвращается ошибка 404.",
+							"Значение id берутся из файла get_single_object_incorrect_id при запуске коллекции  */",
+							"",
+							"// Проверяем, что ответ содержит код 404 и сообщение об ошибке",
+							"pm.test('Код 404', () => {",
+							"    pm.response.to.have.status(404)",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Сообщение об ошибке присутствует', () => {",
+							"    pm.expect(jsonData).to.include.key('error')",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects/{{get_incorrect_id}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"{{get_incorrect_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_new_object",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* Запрос на создание нового объекта с корректно заполненным body (поля name, data) возвращает ответ 200 с объектом, содержащим body, id и время создания */",
+							"",
+							"pm.test('Успешный POST-запрос', () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Нет сообщения об ошибке', () => {",
+							"    pm.expect(jsonData).to.not.have.property('error');",
+							"});",
+							"",
+							"pm.test('Введенные характеристики объекта есть', () => {",
+							"    pm.expect(jsonData.name).to.eql('Motorola Moto Z');",
+							"    pm.expect(jsonData.data).to.be.an('object').that.has.all.keys('color', 'price').and.include({",
+							"        color: 'black', ",
+							"        price: 15550",
+							"    });",
+							"});",
+							"",
+							"pm.test('id присвоен', () => {",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"});",
+							"",
+							"pm.test('Дата создания есть', () => {",
+							"    pm.expect(jsonData).to.have.property('createdAt');",
+							"});",
+							"",
+							"// Проверяем, что объект с таким id существует в базе",
+							"pm.test('Объект создан в базе', () => {",
+							"    let objectId = jsonData.id;",
+							"    pm.sendRequest(`https://api.restful-api.dev/objects/${objectId}`, (error, response) => {",
+							"        pm.expect(response).to.have.status(200);",
+							"        pm.expect(response.json().id).to.eql(objectId);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"Motorola Moto Z\",\n    \"data\": {\n        \"color\": \"black\",\n        \"price\": 15550.00\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_new_object_incorrect_name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* Запрос на создание объекта с правильным параметром data и неправильным (неверный тип) name возвращает ошибку 400.",
+							"Данные для name берутся из файла add_new_object_incorrect_name при запуске коллекции */",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Код ответа 400: ' + jsonData.error, () => {",
+							"    pm.response.to.have.status(400)",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"name\": {{add_name_incorrect}},\n    \"data\": {\n        \"color\": \"black\",\n        \"price\": 15550.00\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_new_object_without_name",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* Запрос на создание объекта с правильным параметром data и без параметра name возвращает ошибку 400 (ФР: баг, код 200).*/",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Код ответа 400: ' + jsonData.error, () => {",
+							"    pm.response.to.have.status(400)",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"data\": {\n        \"color\": \"black\",\n        \"price\": 15550.00\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_new_object_incorrect_data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* Запрос на создание объекта с правильным параметром name и неправильным (неверный тип) data возвращает ошибку 400.",
+							"Данные для name берутся из файла add_new_object_incorrect_data при запуске коллекции */",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Код ответа 400: ' + jsonData.error, () => {",
+							"    pm.response.to.have.status(400)",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"name\": \"Motorola Moto Z\",\n    \"data\": {{add_data_incorrect}}\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add_new_object_without_data",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* Запрос на создание объекта с правильным параметром name и без data возвращает ошибку 400 (ФР: баг, код 200). */",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Код ответа 400: ' + jsonData.error, () => {",
+							"    pm.response.to.have.status(400)",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"name\": \"Motorola Moto Z\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update_object",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Запрос на создание тестового объекта",
+							"",
+							"const postRequest = {",
+							"    method: \"POST\",",
+							"    url: \"https://api.restful-api.dev/objects\",",
+							"    header: {'Content-Type': 'application/json'},",
+							"    body:     {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify ({",
+							"    \"name\": \"Techno Spark\",",
+							"    \"data\": {",
+							"        \"color\": \"black\",",
+							"        \"price\": 8550.00",
+							"    }",
+							"        })",
+							"    }",
+							"};",
+							"",
+							"// Отправляем запрос, ошибки выводим в консоль",
+							"pm.sendRequest(postRequest, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  }",
+							"",
+							"// Проверяем код ответа",
+							"    pm.test('Предварительный POST-запрос', () => {",
+							"    pm.expect(response).to.have.status(200);",
+							"  });",
+							"",
+							"// Получаем id объекта для проверки наличия в базе и основного запроса",
+							"    pm.collectionVariables.set('ids', response.json().id);",
+							"    let requestId = pm.collectionVariables.get('ids');",
+							"",
+							"// Проверяем, что объект создан",
+							"    pm.test('Объект есть в базе', () => {",
+							"        pm.sendRequest(`https://api.restful-api.dev/objects/${requestId}`, (error, response) => {",
+							"        pm.expect(response).to.have.status(200);",
+							"        pm.expect(response.json().id).to.eql(requestId);",
+							"    })",
+							"});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправки запроса на обновление объекта по id возвращается код 200 и объект с обновленным body */",
+							"",
+							"pm.test('Основной PUT-запрос', () => {",
+							"   pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Структура ответа', () => {",
+							"    pm.expect(jsonData).to.be.an('object');",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('name');",
+							"    pm.expect(jsonData).to.have.property('data');",
+							"});",
+							"",
+							"pm.test('Совпадение id', () => {",
+							"    let requestId = pm.collectionVariables.get('ids');",
+							"    pm.expect(jsonData.id).to.be.eql(requestId);",
+							"});",
+							"",
+							"pm.test('Новые данные в body', () => {",
+							"    pm.expect(jsonData.data).to.include({ \"year\": 2019 });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// В body добавлен ключ \"year\"\n{\n    \"name\": \"Techno Spark\",\n    \"data\": {\n        \"color\": \"black\",\n        \"price\": 8550.00,\n        \"year\": 2019\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects/{{ids}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"{{ids}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update_non_existing_object",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправки запроса на обновление объекта по id с несуществующим id возвращается код 400 или 404*/",
+							"",
+							"pm.test('Основной PUT-запрос', () => {",
+							"   pm.expect(pm.response.code).to.be.oneOf([400, 404]);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// В body добавлен ключ \"year\"\n{\n    \"name\": \"Techno Spark\",\n    \"data\": {\n        \"color\": \"black\",\n        \"price\": 8550.00,\n        \"year\": 2019\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects/%%((",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"%%(("
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Partial_update",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Создаем тестовый объект",
+							"const postRequest = {",
+							"    method: \"POST\",",
+							"    url: \"https://api.restful-api.dev/objects\",",
+							"    header: {'Content-Type': 'application/json'},",
+							"    body:     {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify ({",
+							"    \"name\": \"Techno Spark\",",
+							"    \"data\": {",
+							"        \"color\": \"black\",",
+							"        \"price\": 8550.00",
+							"    }",
+							"        })",
+							"    }",
+							"};",
+							"",
+							"pm.sendRequest(postRequest, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  }",
+							"",
+							"    pm.test('Предварительный POST-запрос', () => {",
+							"    pm.expect(response).to.have.status(200);",
+							"  });",
+							"",
+							"  // Получение id добавленного объекта для PATCH-запроса",
+							"    pm.collectionVariables.set(\"ids\", response.json().id);",
+							"    let requestId = pm.collectionVariables.get('ids');",
+							"",
+							"    // Проверяем, что объект в базе",
+							"    pm.test('Объект создан в базе', () => {",
+							"        pm.sendRequest(`https://api.restful-api.dev/objects/${requestId}`, (error, response) => {",
+							"        pm.expect(response).to.have.status(200);",
+							"        pm.expect(response.json().id).to.eql(requestId);",
+							"    });",
+							"});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправки запроса на частичное обновление объекта по id возвращается код 200 и объект с обновленным body */",
+							"",
+							"pm.test('Основной PATCH-запрос', () => {",
+							"   pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Структура ответа', () => {",
+							"    pm.expect(jsonData).to.be.an('object');",
+							"    pm.expect(jsonData).to.have.property('id');",
+							"    pm.expect(jsonData).to.have.property('name');",
+							"    pm.expect(jsonData).to.have.property('data');",
+							"});",
+							"",
+							"pm.test('Совпадение id', () => {",
+							"    let requestId = pm.collectionVariables.get('ids');",
+							"    pm.expect(jsonData.id).to.be.eql(requestId);",
+							"});",
+							"",
+							"pm.test('Новые данные в body', () => {",
+							"    pm.expect(jsonData).to.include({ \"name\": \"Techno Spark NEW\" });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// В body изменено значение name\n\n{\n    \"name\": \"Techno Spark NEW\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects/{{ids}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"{{ids}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Partial_update_non-existing_id",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправки запроса на частичное обновление объекта по id c не существующим id возвращается код 400 или 404 */",
+							"",
+							"pm.test('Основной PATCH-запрос', () => {",
+							"   pm.expect(pm.response.code).to.be.oneOf([400, 404])",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "// В body изменено значение name\n\n{\n    \"name\": \"Techno Spark NEW\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/objects/0000____(((000",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"0000____(((000"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete_object",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Создаем тестовый объект",
+							"const postRequest = {",
+							"    method: \"POST\",",
+							"    url: \"https://api.restful-api.dev/objects\",",
+							"    header: {'Content-Type': 'application/json'},",
+							"    body:     {",
+							"        mode: 'raw',",
+							"        raw: JSON.stringify ({",
+							"    \"name\": \"Apple iPhone 14 Pro\",",
+							"    \"data\": {",
+							"        \"color\": \"pink\",",
+							"        \"price\": 125000.00",
+							"    }",
+							"        })",
+							"    }",
+							"};",
+							"",
+							"pm.sendRequest(postRequest, (error, response) => {",
+							"  if (error) {",
+							"    console.log(error);",
+							"  }",
+							"",
+							"    pm.test('Предварительный POST-запрос', () => {",
+							"    pm.expect(response).to.have.status(200);",
+							"  });",
+							"",
+							"    // Получение id добавленного объекта для основного DELETE-запроса",
+							"    pm.collectionVariables.set(\"ids\", response.json().id);",
+							"    let requestId = pm.collectionVariables.get('ids');",
+							"",
+							"    // Проверяем, что объект в базе",
+							"    pm.test('Объект создан в базе', () => {",
+							"        pm.sendRequest(`https://api.restful-api.dev/objects/${requestId}`, (error, response) => {",
+							"        pm.expect(response).to.have.status(200);",
+							"        pm.expect(response.json().id).to.eql(requestId);",
+							"    });",
+							"});   ",
+							"});",
+							"",
+							"",
+							"    "
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправки запроса на удаление объекта по id возвращается код 200 и объект с обновленным body */",
+							"",
+							"pm.test('Основной DELETE-запрос', () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"let jsonData = pm.response.json();",
+							"",
+							"pm.test('Сообщение об удалении объекта с заданным id', () => {",
+							"    let responseMessage = 'Object with id = ' + pm.collectionVariables.get('ids') + ' has been deleted.';",
+							"    pm.expect(jsonData.message).to.eql(responseMessage);",
+							"});",
+							"",
+							"// Проверяем, что объекта нет в базе",
+							"pm.test('Объект не найден в базе', () => {",
+							"    pm.sendRequest(`https://api.restful-api.dev/objects/${pm.collectionVariables.get('ids')}`, (error, response) => {",
+							"        pm.expect(response).to.have.status(404);",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects/{{ids}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"{{ids}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete_non_existing_object",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"/* При отправки запроса на удаление объекта по id с несуществующим id возвращается код 400 или 404 */",
+							"",
+							"pm.test('Основной DELETE-запрос', () => {",
+							"    pm.expect(pm.response.code).to.be.oneOf([400, 404]);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/objects/--------000----",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"objects",
+						"--------000----"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://api.restful-api.dev/objects",
+			"type": "string"
+		},
+		{
+			"key": "add_name_incorrect",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "add_data_incorrect",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "ids",
+			"value": "{{ids}}",
+			"type": "string"
+		}
+	]
+}
