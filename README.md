@@ -25,6 +25,7 @@
 ## Примеры тестов
 *   **Документация:**
     *   [Тест-ран в Qase (тестирование формы поиска)](https://app.qase.io/public/report/814116a4198b6cea0b65154e734634b006699e13 "Тест-ран в Qase")
+    *   [Чек-лист проверок для сайта tallinn.cold-time.com](https://docs.google.com/spreadsheets/d/1q1d5A5vSLB58soQZW1ishj9SFb5PjUWTRWBal-xyxBI/edit?usp=sharing "Чек-лист для сайта")
     *   [Тестирование веб (баг-репорты в YouTrack)](https://peppino.youtrack.cloud/issues/tctc "Баг-репорты в YouTrack")
     *   [Тестирование мобильного приложения (баг-репорты в YouTrack)](https://peppino.youtrack.cloud/issues/mobsamregr "Баг-репорты в YouTrack")
 *   **SQL-запросы:** [таблица Theater (Mariadb) ](assets/sql/diagram.md)
