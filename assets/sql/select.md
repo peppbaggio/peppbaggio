@@ -14,7 +14,7 @@ ORDER BY rate_per_performance DESC, singer_name ASC;
     <img src="selects/gremin.png">
 </details><br>
 
-*   *Вывести список опер, которые не могут быть поставлены силами театра (opera.is_staged = 0), список партий из этих опер, которых нет в репертуаре певцев с указанием типа голоса, и список певцов труппы с подходящими голосами (или прочерк, если таких пецов нет)*
+*   *Вывести список опер, которые не могут быть поставлены силами театра (opera.is_staged = 0), список партий из этих опер, которых нет в репертуаре певцов с указанием типа голоса, и список певцов труппы с подходящими голосами (или прочерк, если таких певцов нет)*
 ```sql
 WITH 
     not_staged AS 
@@ -38,7 +38,7 @@ ORDER BY opera_title, character_name, singer_name;
     <img src="selects/non_staged_operas.png">
 </details><br>
 
-*   *Увольняется Й. Марини. Вывести оперы, которые теперь невозможно исполнять, вместе с партиями для соответствующего голоса. Здесь два запроса: вывести партии, для которых Марини — единственный исполнитель; вычислить количество певиц с ее типом голоса в труппе и вывести оперы, в которых требуют участия сразу всех певицы с этим типом голоса*
+*   *Увольняется Й. Марини. Вывести оперы, которые теперь невозможно исполнять, вместе с партиями для соответствующего голоса. Здесь два запроса: вывести партии, для которых Марини — единственный исполнитель; вычислить количество певиц с ее типом голоса в труппе и вывести оперы, которые требуют участия сразу всех певиц с этим типом голоса*
 ```sql
 WITH 
 /* id певца и голоса певицы "Марини Й." */
@@ -53,14 +53,14 @@ mezzo_count AS (
 /* количество занятых меццо-сопрано по операм; оконная функция нужна, чтобы сохранить названия всех партий */
 some_mezzo AS (
     SELECT character_id, opera_id, COUNT(character_id) OVER (PARTITION BY opera_id) AS character_count FROM opera_character WHERE voice_id = (SELECT voice_id FROM marini))
-/* Основной запрос: партии меццо, которые исполняет только один певец и это — Марини */
+/* Основной запрос: партии меццо, которые исполняет только одна певица и это — Марини */
 SELECT opera_title, character_name FROM mezzo_opera
     JOIN role USING(character_id)
     JOIN opera_character USING(character_id)
     JOIN opera ON mezzo_opera.opera_id = opera.opera_id
     WHERE character_id IN (SELECT character_id FROM role GROUP BY character_id HAVING COUNT(role_id) = 1) AND singer_id = (SELECT singer_id FROM marini)
 UNION
-/* Основной запрос: оперы, требую участия всех меццо в труппе */
+/* Основной запрос: оперы, требующие участия всех меццо в труппе */
 SELECT opera_title, character_name FROM some_mezzo
     JOIN opera_character USING(character_id)
     JOIN opera ON some_mezzo.opera_id = opera.opera_id
