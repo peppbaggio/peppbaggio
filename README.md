@@ -31,6 +31,7 @@
 *   **SQL-запросы:** [таблица Theater (Mariadb) ](assets/sql/diagram.md)
 *   **Тестирование API:**
     *   [Postman-коллекция](assets/postman/postman.md)
+    *   [Pytest: файлы кода](assets/python/pytest/about.md)
 
 
 
