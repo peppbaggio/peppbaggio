@@ -9,7 +9,7 @@ json_data_all = response_all.json()
 
 # Проверка кода ответа
 def test_get_all_objects_statuscode():
-    assert response_all.status_code == 100, ("Ошибка: ожидался код 200, "
+    assert response_all.status_code == 200, ("Ошибка: ожидался код 200, "
                                          "пришел код ") + str(response_all.status_code)
 
 # Проверка типа данных в теле ответа (список)
